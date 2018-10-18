@@ -12,3 +12,10 @@ exports.insert = (req, res) => {
     res.status(201).send({ message: "success", id: result._id });
   });
 };
+
+exports.getById = (req, res) => {
+  let id = req.params.id;
+  user_model.getById(id).then(result => {
+    res.status(201).send({ message: "success", result });
+  });
+};

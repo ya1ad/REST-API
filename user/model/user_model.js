@@ -18,3 +18,12 @@ exports.createUser = userData => {
   const user = new User(userData);
   return user.save();
 };
+
+exports.getById = id => {
+  const user = User.findById(id)
+    .select("-__v")
+    .select("-_id")
+    .select("-password")
+    .select("-level");
+  return user;
+};
