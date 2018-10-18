@@ -27,3 +27,7 @@ exports.getById = id => {
     .select("-level");
   return user;
 };
+
+exports.getUserByEmail = email => {
+  return User.findOne({ email: email });
+};
