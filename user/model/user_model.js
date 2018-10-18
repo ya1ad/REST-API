@@ -31,3 +31,11 @@ exports.getById = id => {
 exports.getUserByEmail = email => {
   return User.findOne({ email: email });
 };
+
+exports.patchUser = (id, userData) => {
+  return User.findByIdAndUpdate(id, userData, { new: true });
+};
+
+exports.removeById = id => {
+  return User.findByIdAndDelete(id);
+};

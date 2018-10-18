@@ -2,6 +2,7 @@ const user_model = require("../../user/model/user_model");
 const config = require("../../common/.env.config");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
+
 exports.hasAuthValidFields = (req, res, next) => {
   let errors = [];
 
@@ -39,7 +40,9 @@ exports.isPasswordAndEmailMatch = (req, res, next) => {
       .digest("base64");
     if (hash === info[1]) {
       req.body = {
-        user_id: user._id
+        user_id: user._id,
+        level: user.level,
+        name: user.firstName + user.lastName
       };
       return next();
     }
@@ -58,4 +61,21 @@ exports.validTokenNeeded = (req, res, next) => {
   }
 
   return res.status(401).send();
+};
+
+exports.isSameUser = (req, res, next) => {
+  if (req.jwt.user_id === req.params.id) {
+    return res.status(401).send({ message: "failure" });
+  }
+  return next();
+};
+
+exports.isHasValidPermission = (req, res, next) => {
+  /**
+   * Let's assume level 1 is admin user
+   */
+  if (req.jwt.level === 1) {
+    return next();
+  }
+  return res.status(401).send({ message: "failure" });
 };
