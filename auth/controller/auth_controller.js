@@ -4,8 +4,9 @@ const config = require("../../common/.env.config");
 
 exports.login = (req, res) => {
   try {
-    const token = jwt.sign(req.body, config.secret);
-    res.status(201).send({ accessToken: token });
+    const token = jwt.sign(req.body, config.secret, { expiresIn: 60 * 60 });
+    res.setHeader("x-auth", token);
+    res.status(201).send({ message: "success" });
   } catch (err) {
     res.send().status(500);
   }

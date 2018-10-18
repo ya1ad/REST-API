@@ -1,4 +1,6 @@
 const user_model = require("../../user/model/user_model");
+const config = require("../../common/.env.config");
+const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 exports.hasAuthValidFields = (req, res, next) => {
   let errors = [];
@@ -43,4 +45,17 @@ exports.isPasswordAndEmailMatch = (req, res, next) => {
     }
     res.status(401).send({ message: "failure" });
   });
+};
+
+exports.validTokenNeeded = (req, res, next) => {
+  if (req.headers["x-auth"]) {
+    try {
+      req.jwt = jwt.verify(req.headers["x-auth"], config.secret);
+      return next();
+    } catch (error) {
+      return res.status(401).send();
+    }
+  }
+
+  return res.status(401).send();
 };
